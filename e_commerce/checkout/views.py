@@ -25,3 +25,4 @@ class CheckoutList(generics.ListAPIView):
         checkout = Checkout.objects.all()
         serializer = CheckoutViewSerializer(checkout, many=True)
         return Response(serializer.data)
+

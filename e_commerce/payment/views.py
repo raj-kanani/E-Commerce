@@ -1,17 +1,18 @@
 import stripe
 from django.conf import settings
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from rest_framework import status
-
 from .serializers import *
 import logging
 from .models import Payment
 from rest_framework.response import Response
+from product.models import Product
 
-from order.models import Order
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class SuccessView(TemplateView):
@@ -25,41 +26,14 @@ class CancelView(TemplateView):
 class ProductLanding(TemplateView):
     template_name = 'landing.html'
 
-    def get(self, request):
-        product = Payment.objects.all()
-        serializer = PaymentSerializer(product, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        data = request.data
-        order = Order.objects.get(pk=data['order_id'])
-        YOUR_DOMAIN = 'http://127.0.0.1;8000/'
-        if Payment.objects.filter(order_id=order).exists():
-            return Response({'msg': 'your payment already done'})
-        else:
-            checkout_session = stripe.checkout.Session.create(
-                payment_method_types=['card'],
-                line_items=[
-                    {
-
-                        'price_data': {'currency': 'inr',
-                                       'unit_amount': int(order.total_amount),
-                                       'product_data': {'name': order.user.username}},
-
-                        'quantity': 1,
-                    },
-                ],
-                metadata={"order_id": order.id},
-                mode='payment',
-                success_url=YOUR_DOMAIN + 'payment_success',
-                cancel_url=YOUR_DOMAIN + 'payment_cancel',
-            )
-            pay = Payment.objects.create(user=request.user,
-                                         payment_mode=data['payment_mode'],
-                                         order_id=order,
-                                         status='Done')
-
-            return JsonResponse({'url': checkout_session.url})
+    def get_context_data(self, **kwargs):
+        product = Product.objects.get(product_name='realme')
+        context = super(ProductLanding, self).get_context_data(**kwargs)
+        context.update({
+            'product': product,
+            'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY
+        })
+        return context
 
 
 @csrf_exempt
@@ -94,3 +68,34 @@ def stripe_webhook(request):
             pay.transaction_id = event['data']['object']['payment_intent']
             pay.save()
     return HttpResponse(status=status.HTTP_200_OK)
+
+
+class CreateCheckoutSession(View):
+    def get(self, request):
+        payment = Payment.objects.all()
+        serializer = PaymentSerializer(payment, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        product_id = self.kwargs['pk']
+        product = Product.objects.get(pk=product_id)
+
+        YOUR_DOMAIN = "http://127.0.0.1:8000"
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price_data': {'currency': 'inr',
+                                   'unit_amount': product.product_price,
+                                   'product_data': {'name': product.product_name}},
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=YOUR_DOMAIN + '/payment_success',
+            cancel_url=YOUR_DOMAIN + '/payment_cancel',
+        )
+        return JsonResponse({
+            'pk': checkout_session.url
+        })
+

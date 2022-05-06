@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 import os
 
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'address',
     'product',
     'cart',
@@ -33,9 +35,10 @@ INSTALLED_APPS = [
     'payment',
     'django_celery_results',
     'django_celery_beat',
+    'invoice',
 
 ]
-
+CSRF_COOKIE_SECURE = True
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -142,6 +145,17 @@ EMAIL_HOST_USER = 'raj.kanani@plutustec.com'
 EMAIL_HOST_PASSWORD = 'htygxtojzmhbjasv'
 DEFAULT_FROM_EMAIL = 'celery <raj.kanani@plutustec.com>'
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     )
+# }
+#
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=360)
+# }
+
+
 STRIPE_SECRET_KEY = "sk_test_51Ko0FPSAZAIQFh7Amvc23X4lOZQafy1qgJuU7PG23nuCFLKzXjfRPNkBkNCOND4HhAkmokqlorc5ovd2jwK25cUJ00luU9JQpE"
-STRIPE_PUBLISHABLE_KEY = "pk_test_51Ko0FPSAZAIQFh7Ah3OK2mbmWM5Vaf8pbgEKNwASYOU7Ai5qgpys9U7xtSz02zBk0Q1jvIQvqp0qikGbnZzF0YdS00FpXeLBUO"
-STRIPE_WEBHOOK_SECRET = ""
+STRIPE_PUBLIC_KEY = "pk_test_51Ko0FPSAZAIQFh7Ah3OK2mbmWM5Vaf8pbgEKNwASYOU7Ai5qgpys9U7xtSz02zBk0Q1jvIQvqp0qikGbnZzF0YdS00FpXeLBUO"
+STRIPE_WEBHOOK_SECRET = "whsec_EF0gjSRSDcVemZKPNpDieRydeFIMatKu"

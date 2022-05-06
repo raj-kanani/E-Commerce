@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-# from product.models import Product
 from product.models import Product
 
 ORDER_CHOICES = (
@@ -19,10 +17,13 @@ class Order(models.Model):
         items = self.my_order.all()
         totals = 0
         for i in items:
-            totals += i.total__price
+            totals += i.total_price
         return totals
 
     total = property(_get_total)
+
+    def __str__(self):
+        return f"{self.user} - {self.order_choice} - {self.total}"
 
 
 class OrderList(models.Model):
@@ -35,8 +36,7 @@ class OrderList(models.Model):
     def _get_total_price(self):
         return self.total_price
 
-    total__price= property(_get_total_price)
+    total__price = property(_get_total_price)
 
     def __str__(self):
-        return f"{self.user} - {self.product} - {self.order}"
-
+        return f"{self.user} - {self.product} - {self.order.id}"

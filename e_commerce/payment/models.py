@@ -16,13 +16,13 @@ PAYMENT_TYPES = (
 class Payment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
-    payment = models.CharField(max_length=125)
+    transaction_id = models.CharField(max_length=125)
     status = models.CharField(max_length=200, choices=PAYMENT_STATUS)
-    payment_mode = models.CharField(max_length=150, choices=PAYMENT_TYPES)
-    price = models.IntegerField()
+    payment_type = models.CharField(max_length=150, choices=PAYMENT_TYPES)
+    payment_price = models.PositiveIntegerField()
 
     def save(self, *args, **kwargs):
-        o = Order.objects.get(id=self.order_id.id)
-        self.price = Order.total
+        order = Order.objects.get(id=self.order_id.id)
+        self.payment_price = order.total
         return super().save()
 
