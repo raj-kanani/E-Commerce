@@ -1,7 +1,5 @@
-from django.shortcuts import render
-from .models import *
 from .serializers import *
-from rest_framework import viewsets, generics, status
+from rest_framework import generics, status
 from rest_framework.response import Response
 
 
@@ -25,4 +23,3 @@ class CheckoutList(generics.ListAPIView):
         checkout = Checkout.objects.all()
         serializer = CheckoutViewSerializer(checkout, many=True)
         return Response(serializer.data)
-

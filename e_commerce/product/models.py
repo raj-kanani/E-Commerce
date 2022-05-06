@@ -1,8 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
-
 class Product(models.Model):
     def nameFile(instance, filename):
         return '/'.join(['images', str(instance.product_name), filename])

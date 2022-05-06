@@ -1,6 +1,4 @@
 from django.contrib import admin
-
-# Register your models here.
 from .models import *
 
 
@@ -12,5 +10,3 @@ class CartAdmin(admin.ModelAdmin):
 @admin.register(CartItem)
 class CartListAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'cart', 'product', 'quantity', 'price', 'total_price']
-
-

@@ -30,9 +30,6 @@ class OrderApply(APIView):
 
         for item in c_item:
             OrderList.objects.create(user=request.user, product=item.product, order=item.order, price=item.price,
-                                     total_price=item.total_price)
-
-        # return Response({'order_id': Order.id, })
 
         return Response({"order_id": Order.id, "order_amount": Order.total_amount,
                          "order_status": Order.order_status})

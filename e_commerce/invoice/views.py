@@ -24,7 +24,7 @@ def render_to_pdf(template_src, context_dict={}):
 
 class GenerateInvoice(APIView):
     def post(self, request, *args, **kwargs):
-        template = get_template('pdf.html')
+        # template = get_template('pdf.html')
         data = request.data
         order_id = data['order_id']
         order = Order.objects.get(id=order_id)
@@ -66,7 +66,7 @@ class DownloadInvoice(APIView):
 
 class ShareInvoice(APIView):
     def post(self, request):
-        template = get_template('pdf.html')
+        # template = get_template('pdf.html')
         data = request.data
         order_id = data['order_id']
         order = Order.objects.get(id=order_id)
@@ -89,4 +89,3 @@ class ShareInvoice(APIView):
             email.attach('order.pdf', pdf, "application/pdf")
             email.send()
         return Response({'msg': 'Invoice generated! & send mail your account'})
-

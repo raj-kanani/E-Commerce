@@ -11,7 +11,6 @@ from .models import Payment
 from rest_framework.response import Response
 from product.models import Product
 
-
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
@@ -50,14 +49,8 @@ def stripe_webhook(request):
         logging.info("message 1 %s", event)
 
     except ValueError as e:
-        '''
-            Invalid Payment
-        '''
         return HttpResponse(status=400)
     except stripe.error.SignatureVerificationError as e:
-        '''
-            Invalid signature
-        '''
         return HttpResponse(status=400)
     logging.info("message 1 %s", event)
 
@@ -98,4 +91,3 @@ class CreateCheckoutSession(View):
         return JsonResponse({
             'pk': checkout_session.url
         })
-

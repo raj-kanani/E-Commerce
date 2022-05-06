@@ -1,12 +1,8 @@
-from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .models import *
 from .serializers import *
 from rest_framework import viewsets
 
-
-# Create your views here.
 
 class CartCreateList(generics.ListCreateAPIView):
     queryset = Cart.objects.all()

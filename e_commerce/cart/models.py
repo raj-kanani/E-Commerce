@@ -1,6 +1,4 @@
-from decimal import Decimal
 from django.db import models
-from rest_framework import serializers
 from django.contrib.auth.models import User
 from product.models import Product
 
@@ -28,11 +26,11 @@ class CartItem(models.Model):
     price = models.PositiveIntegerField(blank=True, null=True)
     total_price = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
 
-    @property
-    def __int__(self):
-        price = self.price
-        quantity = self.quantity
-        # total_price = self.total_price
-        total_price = price * quantity
-        print(total_price, '---------------------&**&&*&*&*&*&*&*&*&-------------')
-        return total_price
+    # @property
+    # def __int__(self):
+    #     price = self.price
+    #     quantity = self.quantity
+    #     # total_price = self.total_price
+    #     total_price = price * quantity
+    #     print(total_price, '---****--')
+    #     return total_price
